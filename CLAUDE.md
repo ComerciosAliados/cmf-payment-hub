@@ -40,6 +40,18 @@ La app de CMF tiene una pasarela de pago (vía APIs) con:
 
 La documentación de esas APIs se recibirá más adelante.
 
+### Enfoque: migración y unificación
+Los sistemas de pago **ya existen y funcionan**. El proyecto **no construye pagos desde cero**: migra y unifica los procesos actuales (hoy separados y manuales) en un solo hub que **llama a los sistemas existentes** vía sus APIs.
+
+Pasos de la migración:
+1. **Inventario**: qué sistema de pago usa cada empresa (CMF y cada empresa de Rapid), cómo se accede (API o portal manual), quién lo opera y cómo se registra el pago hoy.
+2. **Mapeo**: cómo el hub llama a cada método (idealmente todo vía la pasarela de CMF).
+3. **Conexión gradual**: un método a la vez, empezando por el más usado o el más simple.
+4. **Convivencia**: proceso viejo y hub en paralelo, conciliando que los números cuadren.
+5. **Apagado**: retirar el proceso manual de cada método cuando el hub esté estable.
+
+⚠️ **Clave**: CMF y las empresas de Rapid son entidades distintas. El dinero de cada cobro debe liquidarse en la cuenta de la empresa correcta. Hay que confirmar si la pasarela de CMF soporta cuentas de comercio por empresa o si Rapid tiene cuentas propias (Yappy, banco, adquirente) que hay que conectar aparte.
+
 ### Fase 1 (objetivo inicial)
 Web con base de datos donde el gestor **solo ingresa el monto** (y datos del cliente), se genera un **link de pago** y se le envía al cliente. El **cliente elige** cómo pagar. Todo centralizado: sin preguntar método, sin entrar a sistemas diferentes.
 
@@ -55,6 +67,8 @@ Requisitos transversales:
 1. ¿Con qué sistema central se registran hoy los pagos de Rapid (¿Odoo?)?
 2. ¿Qué áreas aprueban la arquitectura? (Tecnología, Seguridad, Cumplimiento)
 3. ¿Los links vencen? ¿Se permiten pagos parciales?
+4. ¿La pasarela de CMF puede cobrar a nombre de las empresas de Rapid (cuenta de comercio por empresa) o Rapid usa sus propias cuentas?
+5. Inventario actual: ¿qué métodos usa hoy cada empresa de Rapid y cómo los opera?
 
 ## Demo (este repo)
 
