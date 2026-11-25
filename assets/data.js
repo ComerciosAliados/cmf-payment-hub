@@ -1,9 +1,10 @@
 // Datos 100% ficticios para la demo. Nada aquí es real.
 // El estado se guarda en localStorage del navegador.
 
-const STORE_KEY = 'hubPagosDemo.v1';
+const STORE_KEY = 'hubPagosDemo.v2';
 
 const METHODS = {
+  cmf: 'Tarjeta CMF',
   tarjeta: 'Tarjeta Visa/Mastercard',
   clave: 'Clave',
   ach: 'ACH',
@@ -90,7 +91,7 @@ function seed() {
     };
     if (status === 'pagado') {
       ch.paidAt = daysAgo(Math.max(age - 1, 0), 14);
-      ch.paidMethod = methodKeys[(i + Math.floor(i / 2)) % 4];
+      ch.paidMethod = methodKeys[(i + Math.floor(i / 2)) % methodKeys.length];
       ch.txn = 'TXN-' + (880000 + i * 37);
     }
     charges.push(ch);

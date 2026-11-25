@@ -144,6 +144,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 .method .ic { width: 42px; height: 42px; border-radius: 9px; display: grid; place-items: center; font-weight: 800; font-size: .8rem; flex-shrink: 0; }
 .method b { display: block; }
 .method span { color: var(--muted); font-size: .85rem; }
+.ic-cmf { background: #0f2537; color: #ffffff; }
 .ic-card { background: #e3eefa; color: #0b5cad; }
 .ic-clave { background: #fde7e5; color: #b42318; }
 .ic-ach { background: #e2f4e8; color: #17803d; }

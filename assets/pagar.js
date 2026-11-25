@@ -6,6 +6,7 @@ const charge = decodeCharge(params.get('d') || '');
 const BANKS = ['Banco General', 'Banistmo', 'BAC Credomatic', 'Banesco', 'Global Bank', 'Caja de Ahorros', 'Banco Nacional de Panamá', 'Multibank', 'Credicorp Bank'];
 
 const METHOD_INFO = {
+  cmf: { ic: 'CMF', cls: 'ic-cmf', title: 'Tarjeta CMF', sub: 'Paga con tu tarjeta de crédito CMF, al contado o en cuotas' },
   tarjeta: { ic: 'VISA<br>MC', cls: 'ic-card', title: 'Tarjeta de crédito o débito', sub: 'Visa o Mastercard' },
   clave: { ic: 'CLAVE', cls: 'ic-clave', title: 'Clave', sub: 'Tarjeta de débito de tu banco' },
   ach: { ic: 'ACH', cls: 'ic-ach', title: 'Transferencia ACH', sub: 'Débito desde tu cuenta bancaria' },
@@ -60,6 +61,17 @@ function formShell(title, body, btnLabel) {
 }
 
 const FORMS = {
+  cmf() {
+    formShell('Tarjeta CMF', `
+      <div class="field"><label>Número de tarjeta CMF</label><input required inputmode="numeric" value="0000 0000 0000 0000"></div>
+      <div class="field"><label>Cédula del titular</label><input required value="0-000-0000"></div>
+      <div class="field"><label>Forma de pago</label><select id="plan">
+        <option value="1">Al contado · ${fmtMoney(charge.amount)}</option>
+        ${[3, 6, 12].map((n) => `<option value="${n}">${n} cuotas de ${fmtMoney(charge.amount / n)}</option>`).join('')}
+      </select></div>
+      <p class="muted small">Demo: las cuotas y condiciones reales dependen del producto CMF del cliente.</p>`, `Pagar con Tarjeta CMF`);
+    document.getElementById('pf').onsubmit = (e) => { e.preventDefault(); processing('cmf', 'Validando con CMF… te enviaremos un código para confirmar.'); };
+  },
   tarjeta() {
     formShell('Tarjeta de crédito o débito', `
       <div class="field"><label>Número de tarjeta</label><input required inputmode="numeric" value="4111 1111 1111 1111"></div>

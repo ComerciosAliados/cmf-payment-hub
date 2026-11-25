@@ -250,7 +250,7 @@ function viewNew(v) {
 
 function shareModal(ch, isNew = false) {
   const link = payLink(ch);
-  const msg = `Hola ${ch.clientName}, tienes un pago pendiente con ${ch.company} por ${fmtMoney(ch.amount)} (${ch.concept}). Puedes pagar aquí con tarjeta, Clave, ACH o Yappy: ${link}`;
+  const msg = `Hola ${ch.clientName}, tienes un pago pendiente con ${ch.company} por ${fmtMoney(ch.amount)} (${ch.concept}). Puedes pagar aquí con Tarjeta CMF, Visa/Mastercard, Clave, ACH o Yappy: ${link}`;
   const phone = (ch.phone || '').replace(/\D/g, '');
   $('#modal-root').innerHTML = `
     <div class="modal-bg" id="mbg"><div class="modal" role="dialog" aria-modal="true">
@@ -326,7 +326,7 @@ function viewIntegrations(v) {
     <div class="page-head"><div><h1>Integraciones y API</h1><div class="muted">Hoja de ruta del hub.</div></div></div>
     <div class="int-grid">
       <div class="card"><span class="badge b-pagado">Fase 1</span><h3 style="margin-top:.6rem">Pasarela de pagos</h3>
-        <p class="muted small">Tarjeta Visa/Mastercard, Clave, ACH y Yappy, usando las APIs de la pasarela existente.</p></div>
+        <p class="muted small">Tarjeta CMF, Visa/Mastercard, Clave, ACH y Yappy, usando las APIs de la pasarela existente.</p></div>
       <div class="card"><span class="badge b-pendiente">Fase 2</span><h3 style="margin-top:.6rem">Odoo (ERP)</h3>
         <p class="muted small">Catálogo de precios y servicios, clientes y facturas. Los pagos se registran de vuelta en Odoo automáticamente.</p></div>
       <div class="card"><span class="badge b-info">Fase 3</span><h3 style="margin-top:.6rem">WhatsApp Business</h3>
@@ -348,7 +348,7 @@ POST /api/v1/cobros
   "cliente": { "nombre": "Juan Herrera", "whatsapp": "+50760000002" },
   "monto": 125.50,
   "concepto": "Factura 1234",
-  "metodos": ["tarjeta", "clave", "ach", "yappy"]
+  "metodos": ["cmf", "tarjeta", "clave", "ach", "yappy"]
 }
 
 // Respuesta
