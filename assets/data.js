@@ -1,7 +1,7 @@
 // Datos 100% ficticios para la demo. Nada aquí es real.
 // El estado se guarda en localStorage del navegador.
 
-const STORE_KEY = 'hubPagosDemo.v2';
+const STORE_KEY = 'hubPagosDemo.v3';
 
 const METHODS = {
   cmf: 'Tarjeta CMF',
@@ -11,7 +11,7 @@ const METHODS = {
   yappy: 'Yappy',
 };
 
-const COMPANIES = ['Rapid Servicios (demo)', 'Rapid Equipos (demo)', 'CMF (demo)'];
+const COMPANIES = ['Rapid Servicios (demo)', 'Rapid Equipos (demo)'];
 
 const ROLES = {
   admin: { name: 'Administrador', desc: 'Acceso total: usuarios, permisos, configuración y auditoría.' },
@@ -76,7 +76,7 @@ function seed() {
     if (i === 7) status = 'anulado';
     const ch = {
       id: 'COB-' + String(1024 - i).padStart(5, '0'),
-      company: COMPANIES[i % 3 === 2 ? 2 : i % 2],
+      company: COMPANIES[i % COMPANIES.length],
       clientId: c.id,
       clientName: c.name,
       phone: c.phone,

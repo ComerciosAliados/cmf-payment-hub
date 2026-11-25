@@ -1,6 +1,8 @@
 # CMF Payment Hub
 
-Hub de pagos centralizado para CMF Panamá.
+Hub de pagos centralizado para las empresas de **Grupo Rapid**, con **Tarjeta CMF** como uno de sus métodos de pago.
+
+> **Alcance actual: solo Rapid.** CMF ya tiene sus propios sistemas de cobro y **no** se migra a este hub. CMF participa únicamente como **método de pago** (Tarjeta CMF) disponible para los clientes de Rapid.
 
 ## Contexto de la empresa
 
@@ -53,7 +55,7 @@ Pasos de la migración:
 ⚠️ **Clave**: CMF y las empresas de Rapid son entidades distintas. El dinero de cada cobro debe liquidarse en la cuenta de la empresa correcta. Hay que confirmar si la pasarela de CMF soporta cuentas de comercio por empresa o si Rapid tiene cuentas propias (Yappy, banco, adquirente) que hay que conectar aparte.
 
 ### Fase 1 (objetivo inicial)
-Web con base de datos donde el gestor **solo ingresa el monto** (y datos del cliente), se genera un **link de pago** y se le envía al cliente. El **cliente elige** cómo pagar. Todo centralizado: sin preguntar método, sin entrar a sistemas diferentes.
+Para **Rapid**: web con base de datos donde el gestor **solo ingresa el monto** (y datos del cliente), se genera un **link de pago** y se le envía al cliente. El **cliente elige** cómo pagar. Todo centralizado: sin preguntar método, sin entrar a sistemas diferentes.
 
 Requisitos transversales:
 - Seguridad completa: login, perfiles, roles, permisos, auditoría.
