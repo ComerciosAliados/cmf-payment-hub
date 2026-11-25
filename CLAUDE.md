@@ -54,6 +54,16 @@ Pasos de la migración:
 
 ⚠️ **Clave**: CMF y las empresas de Rapid son entidades distintas. El dinero de cada cobro debe liquidarse en la cuenta de la empresa correcta. Hay que confirmar si la pasarela de CMF soporta cuentas de comercio por empresa o si Rapid tiene cuentas propias (Yappy, banco, adquirente) que hay que conectar aparte.
 
+### Replicar la pasarela de CMF para Rapid
+"Migrar" significa **replicar** la integración de pagos de la app de CMF, pero con el dinero liquidándose en las **cuentas de Rapid**. Dos frentes en paralelo:
+
+| Frente | Responsable | Qué aporta |
+|---|---|---|
+| Técnico | Proveedor que desarrolló la app de CMF | Procedimiento de integración: APIs, flujos, webhooks, sandbox, código reutilizable |
+| Bancario / comercial | Rapid | Afiliaciones de comercio a nombre de Rapid (adquirente Visa/MC, Clave, cuenta ACH, Yappy Comercial, Comercio Aliado de CMF) y sus credenciales |
+
+Las afiliaciones bancarias pueden tardar semanas: iniciarlas temprano.
+
 ### Fase 1 (objetivo inicial)
 Para **Rapid**: web con base de datos donde el gestor **solo ingresa el monto** (y datos del cliente), se genera un **link de pago** y se le envía al cliente. El **cliente elige** cómo pagar. Todo centralizado: sin preguntar método, sin entrar a sistemas diferentes.
 
