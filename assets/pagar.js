@@ -63,8 +63,9 @@ function formShell(title, body, btnLabel) {
 const FORMS = {
   cmf() {
     formShell('Tarjeta CMF', `
-      <div class="field"><label>Número de tarjeta CMF</label><input required inputmode="numeric" value="0000 0000 0000 0000"></div>
-      <div class="field"><label>Cédula del titular</label><input required value="0-000-0000"></div>
+      <p class="muted" style="margin-top:0">Ingresa el correo y la cédula registrados en tu cuenta CMF.</p>
+      <div class="field"><label>Correo electrónico</label><input required type="email" autocomplete="email" value="cliente@ejemplo.com"></div>
+      <div class="field"><label>Cédula</label><input required value="0-000-0000"></div>
       <div class="field"><label>Forma de pago</label><select id="plan">
         <option value="1">Al contado · ${fmtMoney(charge.amount)}</option>
         ${[3, 6, 12].map((n) => `<option value="${n}">${n} cuotas de ${fmtMoney(charge.amount / n)}</option>`).join('')}

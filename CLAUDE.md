@@ -32,7 +32,7 @@ El grupo dueño de CMF adquirió las empresas de **Grupo Rapid**, cuya cobranza 
 
 ### Lo que ya existe
 La app de CMF tiene una pasarela de pago (vía APIs) con:
-- **Tarjeta CMF** (tarjetas de crédito propias de CMF): método **separado** de Visa/Mastercard, con opción de pago en cuotas
+- **Tarjeta CMF** (tarjetas de crédito propias de CMF): método **separado** de Visa/Mastercard, con opción de pago en cuotas. El cliente se identifica con **correo y cédula** (no con número de tarjeta)
 - Tarjeta **Visa / Mastercard** (débito y crédito)
 - **Clave**
 - **ACH**
