@@ -25,14 +25,43 @@ Este repositorio es **PÚBLICO**. Reglas obligatorias:
 - ✅ La demo es estática (HTML/CSS/JS) y simula los flujos con datos inventados.
 - ✅ El backend real con integraciones de pago vivirá en un **repositorio privado separado**.
 
-## Alcance (por definir)
+## Alcance
 
-Preguntas abiertas:
+### El problema
+El grupo dueño de CMF adquirió las empresas de **Grupo Rapid**, cuya cobranza es muy manual: según el método que elija el cliente (Yappy, ACH, tarjeta), el gestor tiene que entrar a sistemas distintos, pedir datos y registrar todo a mano.
 
-1. ¿Qué pagos centraliza el hub? ¿Pagos de clientes a CMF (cuotas), liquidaciones a Comercios Aliados, o ambos?
-2. ¿Qué canales o proveedores se integran? (pasarelas de tarjeta, ACH, billeteras digitales, sucursales, bancos)
-3. ¿Con qué sistema central (core de crédito) se conecta y si tiene API?
-4. ¿Qué áreas aprueban la arquitectura? (Tecnología, Seguridad, Cumplimiento)
+### Lo que ya existe
+La app de CMF tiene una pasarela de pago (vía APIs) con:
+- Tarjeta **Visa / Mastercard** (débito y crédito)
+- **Clave**
+- **ACH**
+- **Yappy** (Banco General)
+
+La documentación de esas APIs se recibirá más adelante.
+
+### Fase 1 (objetivo inicial)
+Web con base de datos donde el gestor **solo ingresa el monto** (y datos del cliente), se genera un **link de pago** y se le envía al cliente. El **cliente elige** cómo pagar. Todo centralizado: sin preguntar método, sin entrar a sistemas diferentes.
+
+Requisitos transversales:
+- Seguridad completa: login, perfiles, roles, permisos, auditoría.
+- **API / web services** propios para que otros sistemas se conecten en el futuro.
+
+### Fases siguientes (visión)
+- **Fase 2 – Odoo (ERP de Grupo Rapid)**: traer catálogo de precios, servicios, clientes, y registrar pagos de vuelta. Ya existen APIs de Odoo usadas antes para Rapid.
+- **Fase 3 – WhatsApp Business**: que el cliente se autogestione (consultar saldo, recibir y pagar links) desde WhatsApp.
+
+### Preguntas abiertas
+1. ¿Con qué sistema central se registran hoy los pagos de Rapid (¿Odoo?)?
+2. ¿Qué áreas aprueban la arquitectura? (Tecnología, Seguridad, Cumplimiento)
+3. ¿Los links vencen? ¿Se permiten pagos parciales?
+
+## Demo (este repo)
+
+Sitio estático en la raíz, publicado con GitHub Pages:
+- `index.html` + `assets/app.js`: panel interno (login simulado por rol, dashboard, cobros, nuevo cobro, clientes, usuarios y permisos, auditoría, integraciones).
+- `pagar.html` + `assets/pagar.js`: página que ve el cliente al abrir el link. Los datos del cobro viajan codificados en el link (`?d=`), así el link funciona en cualquier dispositivo.
+- `assets/data.js`: datos ficticios y estado guardado en `localStorage` del navegador.
+- Ningún pago es real: todo está simulado.
 
 ## Arquitectura propuesta (producción, repo privado)
 
