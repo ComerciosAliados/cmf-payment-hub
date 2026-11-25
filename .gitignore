@@ -1,0 +1,21 @@
+# Credenciales y configuración local (nunca subir)
+.env
+.env.*
+*.pem
+*.key
+credentials*.json
+service-account*.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# Sistema / editores
+.DS_Store
+.vscode/
+.idea/
