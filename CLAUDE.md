@@ -90,6 +90,14 @@ Sitio estático en la raíz, publicado con GitHub Pages:
 - `assets/data.js`: datos ficticios y estado guardado en `localStorage` del navegador.
 - Ningún pago es real: todo está simulado.
 
+## Decisiones tomadas
+
+- **Todo en GCP** (decisión del responsable del proyecto): un solo proveedor, ya usado por la empresa, con un único control de accesos y auditoría. No usar Supabase, Cloudflare ni otros proveedores para datos o hosting salvo que se decida explícitamente.
+- **Base de datos: Cloud SQL for PostgreSQL** (no Firestore, no Supabase): transacciones ACID y modelo relacional para pagos.
+- **Frontend: Firebase Hosting. Backend: Cloud Run.**
+- **Entornos separados**: dev, QA y prod, cada uno en su propio proyecto GCP. Datos y credenciales reales solo en prod.
+- **Responsabilidad compartida**: GCP asegura la infraestructura; la configuración, los permisos y el código son responsabilidad del proyecto.
+
 ## Arquitectura propuesta (producción, repo privado)
 
 | Componente | Tecnología |
