@@ -1,122 +1,23 @@
-# CMF Payment Hub
+# Hub de Pagos · Demo
 
-Hub de pagos centralizado para las empresas de **Grupo Rapid**, con **Tarjeta CMF** como uno de sus métodos de pago.
+Demo estática (HTML/CSS/JS) de un hub de pagos, publicada con GitHub Pages desde la rama `main`.
 
-> **Alcance actual: solo Rapid.** CMF ya tiene sus propios sistemas de cobro y **no** se migra a este hub. CMF participa únicamente como **método de pago** (Tarjeta CMF) disponible para los clientes de Rapid.
+## Reglas (repositorio PÚBLICO)
 
-## Contexto de la empresa
+- ❌ Nunca subir credenciales, claves de API, tokens ni contraseñas.
+- ❌ Nunca usar datos reales: solo datos ficticios.
+- ❌ Nunca incluir información interna, estrategia, documentación de proveedores ni URLs o configuración de sistemas internos. Todo eso vive en el repositorio privado del proyecto.
+- ✅ Todo pago es simulado.
 
-CMF es una empresa del sector financiero en Panamá que ofrece soluciones de financiamiento y productos de crédito:
+## Estructura
 
-- **Productos financieros**: tarjetas de crédito, tarjetas digitales, productos prepagados y financiamiento.
-- **Comercios Aliados**: establecimientos donde los clientes usan productos CMF para comprar y pagar en cuotas.
-- **Gestión de cartera y cobros**: seguimiento de clientes, morosidad, recuperación de saldos y comportamiento de pago.
-- **Canales comerciales**: vendedores, sucursales, referidos y campañas.
-
-El responsable del proyecto es Data & Analytics Officer, vinculado al departamento de Cobros, y trabaja con las áreas Comercial, Operaciones, Tecnología y Gestión de Cartera.
-
-## Estado del proyecto
-
-**Fase actual: demo pública en GitHub Pages.**
-
-Este repositorio es **PÚBLICO**. Reglas obligatorias:
-
-- ❌ **Nunca** subir credenciales, claves de API, tokens ni contraseñas.
-- ❌ **Nunca** usar datos reales de clientes, cuentas, saldos ni transacciones. Solo datos ficticios.
-- ❌ **Nunca** incluir URLs, endpoints ni configuración de sistemas internos de CMF.
-- ✅ La demo es estática (HTML/CSS/JS) y simula los flujos con datos inventados.
-- ✅ El backend real con integraciones de pago vivirá en un **repositorio privado separado**.
-
-## Alcance
-
-### El problema
-El grupo dueño de CMF adquirió las empresas de **Grupo Rapid**, cuya cobranza es muy manual: según el método que elija el cliente (Yappy, ACH, tarjeta), el gestor tiene que entrar a sistemas distintos, pedir datos y registrar todo a mano.
-
-### Lo que ya existe
-La app de CMF tiene una pasarela de pago (vía APIs) con:
-- **Tarjeta CMF** (tarjetas de crédito propias de CMF): método **separado** de Visa/Mastercard, con opción de pago en cuotas. El cliente se identifica con **correo y cédula** (no con número de tarjeta)
-- Tarjeta **Visa / Mastercard** (débito y crédito)
-- **Clave**
-- **ACH**
-- **Yappy** (Banco General)
-
-La documentación de esas APIs se recibirá más adelante.
-
-### Enfoque: migración y unificación
-Los sistemas de pago **ya existen y funcionan**. El proyecto **no construye pagos desde cero**: migra y unifica los procesos actuales (hoy separados y manuales) en un solo hub que **llama a los sistemas existentes** vía sus APIs.
-
-Pasos de la migración:
-1. **Inventario**: qué sistema de pago usa cada empresa (CMF y cada empresa de Rapid), cómo se accede (API o portal manual), quién lo opera y cómo se registra el pago hoy.
-2. **Mapeo**: cómo el hub llama a cada método (idealmente todo vía la pasarela de CMF).
-3. **Conexión gradual**: un método a la vez, empezando por el más usado o el más simple.
-4. **Convivencia**: proceso viejo y hub en paralelo, conciliando que los números cuadren.
-5. **Apagado**: retirar el proceso manual de cada método cuando el hub esté estable.
-
-⚠️ **Clave**: CMF y las empresas de Rapid son entidades distintas. El dinero de cada cobro debe liquidarse en la cuenta de la empresa correcta. Hay que confirmar si la pasarela de CMF soporta cuentas de comercio por empresa o si Rapid tiene cuentas propias (Yappy, banco, adquirente) que hay que conectar aparte.
-
-### Replicar la pasarela de CMF para Rapid
-"Migrar" significa **replicar** la integración de pagos de la app de CMF, pero con el dinero liquidándose en las **cuentas de Rapid**. Dos frentes en paralelo:
-
-| Frente | Responsable | Qué aporta |
-|---|---|---|
-| Técnico | Proveedor que desarrolló la app de CMF | Procedimiento de integración: APIs, flujos, webhooks, sandbox, código reutilizable |
-| Bancario / comercial | Rapid | Afiliaciones de comercio a nombre de Rapid (adquirente Visa/MC, Clave, cuenta ACH, Yappy Comercial, Comercio Aliado de CMF) y sus credenciales |
-
-Las afiliaciones bancarias pueden tardar semanas: iniciarlas temprano.
-
-### Fase 1 (objetivo inicial)
-Para **Rapid**: web con base de datos donde el gestor **solo ingresa el monto** (y datos del cliente), se genera un **link de pago** y se le envía al cliente. El **cliente elige** cómo pagar. Todo centralizado: sin preguntar método, sin entrar a sistemas diferentes.
-
-Requisitos transversales:
-- Seguridad completa: login, perfiles, roles, permisos, auditoría.
-- **API / web services** propios para que otros sistemas se conecten en el futuro.
-
-### Fases siguientes (visión)
-- **Fase 2 – Odoo (ERP de Grupo Rapid)**: traer catálogo de precios, servicios, clientes, y registrar pagos de vuelta. Ya existen APIs de Odoo usadas antes para Rapid.
-- **Fase 3 – WhatsApp Business**: que el cliente se autogestione (consultar saldo, recibir y pagar links) desde WhatsApp.
-
-### Preguntas abiertas
-1. ¿Con qué sistema central se registran hoy los pagos de Rapid (¿Odoo?)?
-2. ¿Qué áreas aprueban la arquitectura? (Tecnología, Seguridad, Cumplimiento)
-3. ¿Los links vencen? ¿Se permiten pagos parciales?
-4. ¿La pasarela de CMF puede cobrar a nombre de las empresas de Rapid (cuenta de comercio por empresa) o Rapid usa sus propias cuentas?
-5. Inventario actual: ¿qué métodos usa hoy cada empresa de Rapid y cómo los opera?
-
-## Demo (este repo)
-
-Sitio estático en la raíz, publicado con GitHub Pages:
 - `index.html` + `assets/app.js`: panel interno (login simulado por rol, dashboard, cobros, nuevo cobro, clientes, usuarios y permisos, auditoría, integraciones).
-- `pagar.html` + `assets/pagar.js`: página que ve el cliente al abrir el link. Los datos del cobro viajan codificados en el link (`?d=`), así el link funciona en cualquier dispositivo.
-- `assets/data.js`: datos ficticios y estado guardado en `localStorage` del navegador.
-- Ningún pago es real: todo está simulado.
+- `pagar.html` + `assets/pagar.js`: página que ve el cliente al abrir el link. Los datos del cobro viajan codificados en el link (`?d=`).
+- `assets/data.js`: datos ficticios y estado en `localStorage`.
+- `assets/styles.css`: estilos.
 
-## Decisiones tomadas
-
-- **Todo en GCP** (decisión del responsable del proyecto): un solo proveedor, ya usado por la empresa, con un único control de accesos y auditoría. No usar Supabase, Cloudflare ni otros proveedores para datos o hosting salvo que se decida explícitamente.
-- **Base de datos: Cloud SQL for PostgreSQL** (no Firestore, no Supabase): transacciones ACID y modelo relacional para pagos.
-- **Frontend: Firebase Hosting. Backend: Cloud Run.**
-- **Entornos separados**: dev, QA y prod, cada uno en su propio proyecto GCP. Datos y credenciales reales solo en prod.
-- **Responsabilidad compartida**: GCP asegura la infraestructura; la configuración, los permisos y el código son responsabilidad del proyecto.
-
-## Arquitectura propuesta (producción, repo privado)
-
-| Componente | Tecnología |
-|---|---|
-| API del hub | Cloud Run (Python / FastAPI) |
-| Transacciones | Cloud SQL (PostgreSQL): ACID, libro contable |
-| Credenciales | Secret Manager |
-| Webhooks y asíncronos | Pub/Sub + Cloud Tasks (reintentos, idempotencia) |
-| Analítica y conciliación | BigQuery + Looker Studio |
-| Auditoría | Logs inmutables de cada movimiento |
-
-Principios: idempotencia en todo cobro, tokenización del proveedor (no almacenar tarjetas, PCI DSS), registro de auditoría completo y conciliación diaria.
-
-## Stack del equipo
-
-BigQuery, SQL, Python, Looker Studio, Google Cloud (Cloud Run, Firestore, Secret Manager), Firebase, Apps Script, GitHub, HTML/CSS/JS.
+Métodos de pago simulados: Tarjeta CMF (correo y cédula, al contado o en cuotas), Visa/Mastercard, Clave, ACH y Yappy.
 
 ## Convenciones
 
-- Idioma de la documentación y la interfaz: **español**.
-- Código (variables, funciones): inglés.
-- La demo se publica con GitHub Pages desde la rama `main`.
+- Interfaz y documentación en español; código en inglés.
