@@ -40,6 +40,10 @@ function refreshStatus(ch) {
   return ch;
 }
 
+function typeBadge(t) {
+  return `<span class="badge ${t === 'abono' ? 'b-pendiente' : 'b-info'}">${CHARGE_TYPES[t] || CHARGE_TYPES.pago_completo}</span>`;
+}
+
 function badge(status) {
   return `<span class="badge b-${status}">${status[0].toUpperCase() + status.slice(1)}</span>`;
 }
@@ -156,7 +160,7 @@ function viewCharges(v) {
         <select id="f-company"><option value="">Todas las empresas</option>${COMPANIES.map((c) => `<option>${esc(c)}</option>`).join('')}</select>
       </div>
       <div class="table-wrap"><table>
-        <thead><tr><th>Cobro</th><th>Cliente</th><th>Concepto</th><th class="num">Monto</th><th>Estado</th><th>Pagado con</th><th></th></tr></thead>
+        <thead><tr><th>Cobro</th><th>Cliente</th><th>Concepto</th><th>Tipo</th><th class="num">Monto</th><th>Estado</th><th>Pagado con</th><th></th></tr></thead>
         <tbody id="rows"></tbody>
       </table></div>
     </div>`;
@@ -170,12 +174,13 @@ function viewCharges(v) {
     $('#rows').innerHTML = rows.length ? rows.map((c) => `
       <tr><td><b>${c.id}</b><div class="muted small">${fmtDate(c.createdAt)}</div></td>
       <td>${esc(c.clientName)}<div class="muted small">${esc(c.company)}</div></td>
-      <td>${esc(c.concept)}</td><td class="num">${fmtMoney(c.amount)}</td><td>${badge(c.status)}</td>
+      <td>${esc(c.concept)}${c.externalRef ? `<div class="muted small">${esc(c.externalRef)}</div>` : ''}</td>
+      <td>${typeBadge(c.chargeType)}</td><td class="num">${fmtMoney(c.amount)}</td><td>${badge(c.status)}</td>
       <td>${c.paidMethod ? esc(METHODS[c.paidMethod]) + `<div class="muted small">${c.txn}</div>` : '<span class="muted">—</span>'}</td>
       <td style="white-space:nowrap">
         ${c.status === 'pendiente' ? `<button class="btn btn-sm" data-share="${c.id}">Enviar link</button>` : ''}
         ${c.status === 'pendiente' && can(me.role, 'anular_cobro') ? `<button class="btn btn-sm btn-danger" data-void="${c.id}">Anular</button>` : ''}
-      </td></tr>`).join('') : '<tr><td colspan="7" class="muted">No hay cobros con esos filtros.</td></tr>';
+      </td></tr>`).join('') : '<tr><td colspan="8" class="muted">No hay cobros con esos filtros.</td></tr>';
     document.querySelectorAll('[data-share]').forEach((b) => b.onclick = () => shareModal(state.charges.find((c) => c.id === b.dataset.share)));
     document.querySelectorAll('[data-void]').forEach((b) => b.onclick = () => {
       const ch = state.charges.find((c) => c.id === b.dataset.void);
@@ -210,8 +215,12 @@ function viewNew(v) {
         <div class="field"><label>Monto (B/.)</label><input id="amount" type="number" min="1" step="0.01" required placeholder="0.00" style="font-size:1.2rem;font-weight:700"></div>
         <div class="field"><label>Vence</label><input id="due" type="date" value="${due}"></div>
       </div>
-      <div class="field"><label>Concepto</label><input id="concept" required placeholder="Ej. Factura #1234, alquiler de equipo…">
-        <div class="muted small" style="margin-top:.3rem">Fase 2: el concepto y el precio se tomarán del catálogo de Odoo.</div></div>
+      <div class="grid-2">
+        <div class="field"><label>Tipo de cobro</label><select id="ctype">${Object.entries(CHARGE_TYPES).map(([k, n]) => `<option value="${k}">${n}</option>`).join('')}</select></div>
+        <div class="field"><label>N.º de cotización o factura</label><input id="extref" placeholder="Ej. COT-5231 o FAC-1234"></div>
+      </div>
+      <div class="field"><label>Concepto</label><input id="concept" required placeholder="Ej. Abono 30% instalación de equipo, mantenimiento mensual…">
+        <div class="muted small" style="margin-top:.3rem">Para pagos por etapas (ej. 30-30-40), crea un cobro tipo <b>Abono</b> por cada etapa con el mismo n.º de documento.</div></div>
       <div class="field"><label>Métodos de pago permitidos</label>
         ${Object.entries(METHODS).map(([k, n]) => `<label class="check"><input type="checkbox" name="m" value="${k}" checked> ${n}</label>`).join('')}</div>
       <button class="btn btn-primary" type="submit">Generar link de pago</button>
@@ -234,6 +243,8 @@ function viewNew(v) {
       phone: $('#cphone').value.trim(),
       email: $('#cemail').value.trim(),
       concept: $('#concept').value.trim(),
+      chargeType: $('#ctype').value,
+      externalRef: $('#extref').value.trim(),
       amount: Math.round(parseFloat($('#amount').value) * 100) / 100,
       methods,
       createdBy: me.id,
@@ -250,7 +261,7 @@ function viewNew(v) {
 
 function shareModal(ch, isNew = false) {
   const link = payLink(ch);
-  const msg = `Hola ${ch.clientName}, tienes un pago pendiente con ${ch.company} por ${fmtMoney(ch.amount)} (${ch.concept}). Puedes pagar aquí con Tarjeta CMF, Visa/Mastercard, Clave, ACH o Yappy: ${link}`;
+  const msg = `Hola ${ch.clientName}, tienes un pago pendiente con ${ch.company} por ${fmtMoney(ch.amount)} (${(CHARGE_TYPES[ch.chargeType] || 'Pago').toLowerCase()}: ${ch.concept}${ch.externalRef ? ', ' + ch.externalRef : ''}). Puedes pagar aquí con Tarjeta CMF, Visa/Mastercard, Clave, ACH o Yappy: ${link}`;
   const phone = (ch.phone || '').replace(/\D/g, '');
   $('#modal-root').innerHTML = `
     <div class="modal-bg" id="mbg"><div class="modal" role="dialog" aria-modal="true">
@@ -347,7 +358,9 @@ POST /api/v1/cobros
   "empresa": "rapid-servicios",
   "cliente": { "nombre": "Juan Herrera", "whatsapp": "+50760000002" },
   "monto": 125.50,
-  "concepto": "Factura 1234",
+  "tipo": "abono",               // "abono" | "pago_completo"
+  "referencia": "COT-5231",      // cotización o factura en el sistema de la empresa
+  "concepto": "Abono 30% instalación",
   "metodos": ["cmf", "tarjeta", "clave", "ach", "yappy"]
 }
 

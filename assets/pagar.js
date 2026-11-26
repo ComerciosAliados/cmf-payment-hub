@@ -24,7 +24,8 @@ function header() {
     <div class="brand" style="justify-content:center"><div class="brand-mark">HP</div><b>${esc(charge.company)}</b></div>
     <div class="muted small">Pago para ${esc(charge.clientName)}</div>
     <div class="pay-amount">${fmtMoney(charge.amount)}</div>
-    <div class="muted">${esc(charge.concept)} · Ref. ${esc(charge.id)}</div>
+    <div style="margin:.2rem 0 .3rem"><span class="badge ${charge.chargeType === 'abono' ? 'b-pendiente' : 'b-info'}">${esc(CHARGE_TYPES[charge.chargeType] || CHARGE_TYPES.pago_completo)}</span></div>
+    <div class="muted">${esc(charge.concept)}${charge.externalRef ? ' · ' + esc(charge.externalRef) : ''} · Ref. ${esc(charge.id)}</div>
   </div>`;
 }
 
@@ -133,6 +134,8 @@ function showReceipt(method, txn, at) {
       <p class="muted">Gracias, ${esc(charge.clientName.split(' ')[0])}. Te enviamos el comprobante por WhatsApp y correo.</p>
       <div class="receipt" style="text-align:left;margin-top:1rem">
         <div><span class="muted">Referencia</span><b>${esc(charge.id)}</b></div>
+        <div><span class="muted">Tipo</span><b>${esc(CHARGE_TYPES[charge.chargeType] || CHARGE_TYPES.pago_completo)}</b></div>
+        ${charge.externalRef ? `<div><span class="muted">Documento</span><b>${esc(charge.externalRef)}</b></div>` : ''}
         <div><span class="muted">Transacción</span><b>${esc(txn)}</b></div>
         <div><span class="muted">Método</span><b>${esc(METHODS[method])}</b></div>
         <div><span class="muted">Fecha</span><b>${fmtDate(at, true)}</b></div>

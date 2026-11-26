@@ -66,7 +66,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary-sof
 
 /* ---------- Cards, badges, tables ---------- */
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; }
-.badge { display: inline-block; padding: .15rem .55rem; border-radius: 999px; font-size: .75rem; font-weight: 700; }
+.badge { white-space: nowrap; display: inline-block; padding: .15rem .55rem; border-radius: 999px; font-size: .75rem; font-weight: 700; }
 .b-pendiente { background: var(--warn-soft); color: var(--warn); }
 .b-pagado { background: var(--ok-soft); color: var(--ok); }
 .b-vencido, .b-anulado { background: var(--bad-soft); color: var(--bad); }
@@ -76,7 +76,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary-sof
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: .65rem .6rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
 th { font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.num, th.num { white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
 
 /* ---------- Login ---------- */
 .login { min-height: calc(100vh - 32px); display: grid; place-items: center; padding: 16px; }

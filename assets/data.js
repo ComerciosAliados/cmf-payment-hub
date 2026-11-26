@@ -1,7 +1,7 @@
 // Datos 100% ficticios para la demo. Nada aquí es real.
 // El estado se guarda en localStorage del navegador.
 
-const STORE_KEY = 'hubPagosDemo.v3';
+const STORE_KEY = 'hubPagosDemo.v4';
 
 const METHODS = {
   cmf: 'Tarjeta CMF',
@@ -10,6 +10,8 @@ const METHODS = {
   ach: 'ACH',
   yappy: 'Yappy',
 };
+
+const CHARGE_TYPES = { pago_completo: 'Pago completo', abono: 'Abono' };
 
 const COMPANIES = ['Rapid Servicios (demo)', 'Rapid Equipos (demo)'];
 
@@ -82,6 +84,8 @@ function seed() {
       phone: c.phone,
       email: c.email,
       concept: concepts[i % concepts.length],
+      chargeType: i % 3 === 0 ? 'abono' : 'pago_completo',
+      externalRef: (i % 4 < 2 ? 'FAC-' : 'COT-') + String(5200 + i * 7),
       amount,
       methods: methodKeys,
       createdBy: creator.id,
@@ -141,14 +145,14 @@ function esc(s) {
 // Los datos del cobro viajan en el link para que funcione en cualquier dispositivo.
 // En producción el link solo llevaría un token opaco firmado; el servidor tendría los datos.
 function encodeCharge(ch) {
-  const payload = { id: ch.id, co: ch.company, cl: ch.clientName, cn: ch.concept, a: ch.amount, m: ch.methods, d: ch.dueDate };
+  const payload = { id: ch.id, co: ch.company, cl: ch.clientName, cn: ch.concept, t: ch.chargeType, r: ch.externalRef, a: ch.amount, m: ch.methods, d: ch.dueDate };
   return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
 }
 
 function decodeCharge(str) {
   try {
     const p = JSON.parse(decodeURIComponent(escape(atob(str))));
-    return { id: p.id, company: p.co, clientName: p.cl, concept: p.cn, amount: p.a, methods: p.m, dueDate: p.d };
+    return { id: p.id, company: p.co, clientName: p.cl, concept: p.cn, chargeType: p.t || 'pago_completo', externalRef: p.r || '', amount: p.a, methods: p.m, dueDate: p.d };
   } catch (e) {
     return null;
   }
